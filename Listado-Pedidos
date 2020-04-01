@@ -1,0 +1,172 @@
+DO{
+
+Write-Host '
+Registro de Paquetes
+-------------------------------'
+
+
+Write-Host '
+1. Insertar pedido de cliente
+2. Ver todos los pedidos del inventario
+3. Ver informacion de un pedido concreto
+4. Eliminar articulo
+5. Ver pedidos entregados
+6. Ver pedidos no entregados
+7. Salir
+'
+
+$opcion = Read-Host '¿Que desea hacer?'
+
+switch($opcion){
+
+1{
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+
+$dni = Read-Host 'Introduce dni cliente: '
+$contenido = Read-Host 'Introduce contenido del pedido: '
+$entregado  = Read-Host 'Introduce si ha sido entregado: '
+$fechaPedido = Read-Host 'Introduce la fecha del pedido: '
+$idArt = Read-Host 'Introduce id: '
+
+$Query = "insert into listadopedidos (id,dni,contenido,entregado,fechaPedido) values('" + $idArt + "','" + $dni + "','" + $contenido +"','" + $entregado + "','" + $fechaPedido + "');"
+
+$Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
+$ConnectionString = "server=" + "localhost" + ";port=3306;uid=" + "root" + ";pwd=" + ";database="+"almacen"
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
+$Connection
+
+
+$Command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $Connection)
+$DataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
+$DataSet = New-Object System.Data.DataSet
+$RecordCount = $dataAdapter.Fill($dataSet, "data") 
+$DataSet.Tables[0]
+$Connection.Close()
+}
+
+2{
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+
+$Query = "SELECT id as ID, dni as DNI , contenido as Contenido, entregado as Entregado, fechaPedido as FechaPedido FROM listadopedidos"
+
+$Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
+$ConnectionString = "server=" + "localhost" + ";port=3306;uid=" + "root" + ";pwd=" + ";database="+"almacen"
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
+
+
+
+$Command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $Connection)
+$DataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
+$DataSet = New-Object System.Data.DataSet
+$RecordCount = $dataAdapter.Fill($dataSet, "data") 
+$DataSet.Tables[0]
+$Connection.Close()
+}
+
+3{
+
+$idBuscar = Read-Host 'Introduce ID: '
+
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+
+$Query = "SELECT id as ID, dni as DNI , contenido as Contenido, entregado as Entregado, fechaPedido as FechaPedido FROM listadopedidos WHERE id = " + $idBuscar
+
+$Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
+$ConnectionString = "server=" + "localhost" + ";port=3306;uid=" + "root" + ";pwd=" + ";database="+"almacen"
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
+
+
+
+$Command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $Connection)
+$DataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
+$DataSet = New-Object System.Data.DataSet
+$RecordCount = $dataAdapter.Fill($dataSet, "data") 
+$DataSet.Tables[0]
+$Connection.Close()
+}
+
+4{
+
+$idBuscar = Read-Host 'Introduce ID (PARA BORRAR) : '
+
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+
+$Query = "DELETE FROM listadopedidos where id = " + $idBuscar
+
+$Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
+$ConnectionString = "server=" + "localhost" + ";port=3306;uid=" + "root" + ";pwd=" + ";database="+"almacen"
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
+
+
+
+$Command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $Connection)
+$DataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
+$DataSet = New-Object System.Data.DataSet
+$RecordCount = $dataAdapter.Fill($dataSet, "data") 
+$DataSet.Tables[0]
+$Connection.Close()
+}
+
+5{
+
+Write-Host 'Los pedido entregados son: '
+
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+
+$Query = "SELECT id as ID, dni as DNI , contenido as Contenido, fechaPedido as FechaPedido FROM listadopedidos WHERE entregado = 1"
+
+$Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
+$ConnectionString = "server=" + "localhost" + ";port=3306;uid=" + "root" + ";pwd=" + ";database="+"almacen"
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
+
+
+
+$Command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $Connection)
+$DataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
+$DataSet = New-Object System.Data.DataSet
+$RecordCount = $dataAdapter.Fill($dataSet, "data") 
+$DataSet.Tables[0]
+$Connection.Close()
+}
+
+6{
+
+Write-Host 'Los pedido no entregados son: '
+
+
+[void][System.Reflection.Assembly]::LoadWithPartialName("MySql.Data")
+
+$Query = "SELECT id as ID, dni as DNI , contenido as Contenido, fechaPedido as FechaPedido FROM listadopedidos WHERE entregado = 0"
+
+$Connection = New-Object MySql.Data.MySqlClient.MySqlConnection
+$ConnectionString = "server=" + "localhost" + ";port=3306;uid=" + "root" + ";pwd=" + ";database="+"almacen"
+$Connection.ConnectionString = $ConnectionString
+$Connection.Open()
+
+
+
+$Command = New-Object MySql.Data.MySqlClient.MySqlCommand($Query, $Connection)
+$DataAdapter = New-Object MySql.Data.MySqlClient.MySqlDataAdapter($Command)
+$DataSet = New-Object System.Data.DataSet
+$RecordCount = $dataAdapter.Fill($dataSet, "data") 
+$DataSet.Tables[0]
+$Connection.Close()
+}
+
+
+}
+
+}while($opcion -ne '7')
+
+Write-Host '
+¡ Gracias, vuelva pronto !'
